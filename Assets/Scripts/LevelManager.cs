@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour {
 
     public int width = 100;
     public int height = 100;
+    public static LevelManager instance;
 
     int[,] level;
 
@@ -14,8 +15,11 @@ public class LevelManager : MonoBehaviour {
     private const int CELL_TREASURE = 2;
     private const int CELL_ENEMY = 3;
 
-	// Use this for initialization
-	void Start () {
+	void Awake () {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
         InitializeEmptyLevel();
 	}
 
