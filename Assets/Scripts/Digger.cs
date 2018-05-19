@@ -40,6 +40,16 @@ public abstract class Digger : MonoBehaviour {
             case DiggerAction.RoomLarge:
                 CreateRoom(new Vector2(transform.position.x, transform.position.y), 7);
                 break;
+            case DiggerAction.PlaceEnemy:
+                LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_ENEMY);
+                break;
+            case DiggerAction.PlaceTreasure:
+                LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_TREASURE);
+                break;
+            case DiggerAction.PlaceExit:
+                LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_EXIT);
+                break;
+
         }
 	}
 

@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour {
     public GameObject openTile;
     public GameObject treasureTile;
     public GameObject enemyTile;
+    public GameObject exitTile;
 
     int[,] level;
 
@@ -18,6 +19,7 @@ public class LevelManager : MonoBehaviour {
     public const int CELL_OPEN = 1;
     public const int CELL_TREASURE = 2;
     public const int CELL_ENEMY = 3;
+    public const int CELL_EXIT = 4;
 
     // This transform allows us to collect all the tiles
     // under a single parent object
@@ -58,6 +60,9 @@ public class LevelManager : MonoBehaviour {
                     break;
                 case CELL_ENEMY:
                     toInstantiate = enemyTile;
+                    break;
+                case CELL_EXIT:
+                    toInstantiate = exitTile;
                     break;
             }
 

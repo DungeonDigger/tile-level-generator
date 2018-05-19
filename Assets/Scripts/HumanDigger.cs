@@ -27,6 +27,12 @@ public class HumanDigger : Digger
             return DiggerAction.RoomMedium;
         if (Input.GetButtonDown("RoomLarge"))
             return DiggerAction.RoomLarge;
+        if (Input.GetButtonDown("PlaceTreasure"))
+            return DiggerAction.PlaceTreasure;
+        if (Input.GetButtonDown("PlaceEnemy"))
+            return DiggerAction.PlaceEnemy;
+        if (Input.GetButtonDown("PlaceExit"))
+            return DiggerAction.PlaceExit;
 
         return DiggerAction.None;
     }
