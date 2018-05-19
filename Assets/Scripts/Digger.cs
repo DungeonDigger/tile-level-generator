@@ -101,8 +101,9 @@ public abstract class Digger : MonoBehaviour {
         isMoving = true;
         StartCoroutine(SmoothMovement(end));
 
-        // Clear out the tile
-        LevelManager.instance.SetTileAt((int)end.x, (int)end.y, LevelManager.CELL_OPEN);
+        // Clear out the tile if it was a block
+        if(LevelManager.instance.GetTileAt((int)end.x, (int)end.y) == LevelManager.CELL_BLOCK)
+            LevelManager.instance.SetTileAt((int)end.x, (int)end.y, LevelManager.CELL_OPEN);
 
         return end;
     }
