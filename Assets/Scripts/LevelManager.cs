@@ -7,28 +7,91 @@ public class LevelManager : MonoBehaviour {
     public int width = 100;
     public int height = 100;
     public static LevelManager instance;
+    public GameObject blockTile;
+    public GameObject openTile;
+    public GameObject treasureTile;
+    public GameObject enemyTile;
 
     int[,] level;
 
-    private const int CELL_BLOCK = 0;
-    private const int CELL_OPEN = 1;
-    private const int CELL_TREASURE = 2;
-    private const int CELL_ENEMY = 3;
+    public const int CELL_BLOCK = 0;
+    public const int CELL_OPEN = 1;
+    public const int CELL_TREASURE = 2;
+    public const int CELL_ENEMY = 3;
+
+    // This transform allows us to collect all the tiles
+    // under a single parent object
+    private Transform levelHolder;
+    GameObject[,] placedTiles;
 
 	void Awake () {
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+        levelHolder = new GameObject("Board").transform;
         InitializeEmptyLevel();
 	}
+
+    public int GetTileAt(int x, int y)
+    {
+        return level[x, y];
+    }
+
+    public void SetTileAt(int x, int y, int tile)
+    {
+        // If the tile has changed, instantiate a new sprite
+        // for it
+        if(level[x, y] != tile)
+        {
+            GameObject toInstantiate = null;
+            switch(tile)
+            {
+                case CELL_BLOCK:
+                    toInstantiate = blockTile;
+                    break;
+                case CELL_OPEN:
+                    toInstantiate = openTile;
+                    break;
+                case CELL_TREASURE:
+                    toInstantiate = treasureTile;
+                    break;
+                case CELL_ENEMY:
+                    toInstantiate = enemyTile;
+                    break;
+            }
+
+            if(toInstantiate != null)
+            {
+                // Destroy the old tile, if there is one
+                if (placedTiles[x, y] != null)
+                    Destroy(placedTiles[x, y]);
+                GameObject newTile = Instantiate(toInstantiate,
+                    new Vector3(x, y, 0f),
+                    Quaternion.identity);
+                newTile.transform.SetParent(levelHolder);
+                placedTiles[x, y] = newTile;
+            }
+        }
+        level[x, y] = tile;
+    }
 
     private void InitializeEmptyLevel()
     {
         level = new int[width, height];
+        placedTiles = new GameObject[width, height];
         for (var i = 0; i < width; i++)
+        {
             for (var j = 0; j < height; j++)
-                level[i,j] = CELL_BLOCK;
+            {
+                level[i, j] = CELL_BLOCK;
+                var newTile = Instantiate(blockTile,
+                    new Vector3(i, j, 0f),
+                    Quaternion.identity);
+                newTile.transform.SetParent(levelHolder);
+                placedTiles[i, j] = newTile;
+            }
+        }      
     }
 
     void OnDrawGizmos()

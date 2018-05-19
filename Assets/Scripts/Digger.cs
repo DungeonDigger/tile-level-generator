@@ -7,6 +7,9 @@ public abstract class Digger : MonoBehaviour {
 
     private Rigidbody2D rb2d;
     private float inverseMoveTime;
+    // Keeps track of whether the digger is moving so that
+    // they can't receive moves while already in motion
+    private bool isMoving = false;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +19,9 @@ public abstract class Digger : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        // Don't process any actions while the digger is moving
+        if (isMoving)
+            return;
         var nextAction = GetNextAction();
         switch(nextAction)
         {
@@ -23,7 +29,7 @@ public abstract class Digger : MonoBehaviour {
             case DiggerAction.Down:
             case DiggerAction.Left:
             case DiggerAction.Right:
-                Move(nextAction);
+                var newLoc = Move(nextAction);
                 break;
         }
 	}
@@ -39,9 +45,10 @@ public abstract class Digger : MonoBehaviour {
     /// Moves the digger up, down, left, or right,
     /// clearing a path if it was not already clear.
     /// </summary>
-    /// <param name="dir"></param>
-    /// <returns></returns>
-    protected void Move (DiggerAction dir)
+    /// <param name="dir">An action specifying the direction
+    /// to move in</param>
+    /// <returns>The new location of the digger</returns>
+    protected Vector2 Move (DiggerAction dir)
     {
         // Calculate the new location of the digger
         Vector2 end = transform.position;
@@ -63,11 +70,32 @@ public abstract class Digger : MonoBehaviour {
                 throw new System.Exception(dir + " is not a valid directional action.");
         }
 
-        // TODO Don't allow the digger to move outside the
+        // Don't allow the digger to move outside the
         // maximum size of the area
+        if(end.x < 0 || end.x >= LevelManager.instance.width
+            || end.y < 0 || end.y >= LevelManager.instance.height)
+        {
+            return transform.position;
+        }
+
+        // 
 
         // Trigger the coroutine to move the agent
+        isMoving = true;
         StartCoroutine(SmoothMovement(end));
+
+        // Clear out the tile
+        LevelManager.instance.SetTileAt((int)end.x, (int)end.y, LevelManager.CELL_OPEN);
+
+        return end;
+    }
+
+    private void DigTile(int x, int y)
+    {
+        if(LevelManager.instance.GetTileAt(x, y) == LevelManager.CELL_BLOCK)
+        {
+            LevelManager.instance.SetTileAt(x, y, LevelManager.CELL_OPEN);
+        }
     }
 
     // Co-routine for moving units from one space to next, takes a parameter end to specify where to move to.
@@ -93,5 +121,6 @@ public abstract class Digger : MonoBehaviour {
             // Return and loop until sqrRemainingDistance is close enough to zero to end the function
             yield return null;
         }
+        isMoving = false;
     }
 }
