@@ -21,6 +21,12 @@ public class HumanDigger : Digger
             return DiggerAction.Left;
         if (Input.GetButtonDown("Right"))
             return DiggerAction.Right;
+        if (Input.GetButtonDown("RoomSmall"))
+            return DiggerAction.RoomSmall;
+        if (Input.GetButtonDown("RoomMedium"))
+            return DiggerAction.RoomMedium;
+        if (Input.GetButtonDown("RoomLarge"))
+            return DiggerAction.RoomLarge;
 
         return DiggerAction.None;
     }

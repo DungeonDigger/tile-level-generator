@@ -31,6 +31,15 @@ public abstract class Digger : MonoBehaviour {
             case DiggerAction.Right:
                 var newLoc = Move(nextAction);
                 break;
+            case DiggerAction.RoomSmall:
+                CreateRoom(new Vector2(transform.position.x, transform.position.y), 3);
+                break;
+            case DiggerAction.RoomMedium:
+                CreateRoom(new Vector2(transform.position.x, transform.position.y), 5);
+                break;
+            case DiggerAction.RoomLarge:
+                CreateRoom(new Vector2(transform.position.x, transform.position.y), 7);
+                break;
         }
 	}
 
@@ -78,8 +87,6 @@ public abstract class Digger : MonoBehaviour {
             return transform.position;
         }
 
-        // 
-
         // Trigger the coroutine to move the agent
         isMoving = true;
         StartCoroutine(SmoothMovement(end));
@@ -88,6 +95,32 @@ public abstract class Digger : MonoBehaviour {
         LevelManager.instance.SetTileAt((int)end.x, (int)end.y, LevelManager.CELL_OPEN);
 
         return end;
+    }
+
+    /// <summary>
+    /// Creates a room centered around a location by clearing out a square area
+    /// </summary>
+    /// <param name="center">The location that should be at the center of the room</param>
+    /// <param name="roomSize">The dimension of the room along each side</param>
+    protected void CreateRoom(Vector2 center, int roomSize)
+    {
+        var left = Mathf.FloorToInt(center.x - (roomSize / 2));
+        var right = Mathf.FloorToInt(center.x + (roomSize / 2));
+        var top = Mathf.FloorToInt(center.y + (roomSize / 2));
+        var bottom = Mathf.FloorToInt(center.y - (roomSize / 2));
+
+        if (left < 0)
+            left = 0;
+        if (right >= LevelManager.instance.width)
+            right = LevelManager.instance.width - 1;
+        if (bottom < 0)
+            bottom = 0;
+        if (top >= LevelManager.instance.height)
+            top = LevelManager.instance.height - 1;
+
+        for (int x = left; x <= right; x++)
+            for (int y = bottom; y <= top; y++)
+                LevelManager.instance.SetTileAt(x, y, LevelManager.CELL_OPEN);
     }
 
     private void DigTile(int x, int y)
