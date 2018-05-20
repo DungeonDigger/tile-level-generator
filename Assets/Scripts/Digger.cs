@@ -4,6 +4,8 @@ using UnityEngine;
 public abstract class Digger : MonoBehaviour {
 
     public float moveTime = 0.1f; // Time it takes the digger to move to a new position (seconds)
+    public int startX = 0;
+    public int startY = 0;
 
     private Rigidbody2D rb2d;
     private float inverseMoveTime;
@@ -15,6 +17,15 @@ public abstract class Digger : MonoBehaviour {
 	void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         inverseMoveTime = 1f / moveTime;
+        // Ensure the starting point is valid
+        if (startX < 0 || startX >= LevelManager.instance.width)
+            startX = 0;
+        if (startY < 0 || startY >= LevelManager.instance.height)
+            startY = 0;
+        transform.position = new Vector2(startX, startY);
+
+        // Clear the square that the digger starts on
+        LevelManager.instance.SetTileAt(startX, startY, LevelManager.CELL_OPEN);
 	}
 	
 	// Update is called once per frame
