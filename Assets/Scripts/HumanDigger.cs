@@ -13,13 +13,13 @@ public class HumanDigger : Digger
     /// input.</returns>
     protected override DiggerAction GetNextAction()
     {
-        if (Input.GetButtonDown("Up"))
+        if (Input.GetButton("Up"))
             return DiggerAction.Up;
-        if (Input.GetButtonDown("Down"))
+        if (Input.GetButton("Down"))
             return DiggerAction.Down;
-        if (Input.GetButtonDown("Left"))
+        if (Input.GetButton("Left"))
             return DiggerAction.Left;
-        if (Input.GetButtonDown("Right"))
+        if (Input.GetButton("Right"))
             return DiggerAction.Right;
         if (Input.GetButtonDown("RoomSmall"))
             return DiggerAction.RoomSmall;
