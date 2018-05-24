@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
 
@@ -97,6 +95,11 @@ public class LevelManager : MonoBehaviour {
                 placedTiles[i, j] = newTile;
             }
         }      
+    }
+
+    public int[,] GetLevel()
+    {
+        return level;
     }
 
     void OnDrawGizmos()
