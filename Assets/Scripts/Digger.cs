@@ -34,6 +34,10 @@ public abstract class Digger : MonoBehaviour {
         if (isMoving)
             return;
         var nextAction = GetNextAction();
+        if (nextAction == DiggerAction.None)
+            return;
+        var currentState = State.GetCurrentState();
+        GameManager.instance.demonstration.Add(new Step(nextAction, currentState));
         switch(nextAction)
         {
             case DiggerAction.Up:

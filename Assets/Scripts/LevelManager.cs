@@ -130,13 +130,13 @@ public class LevelManager : MonoBehaviour {
             int y = int.Parse(toVisit.Split('_')[1]);
             List<string> neighbors = new List<string>();
             if (x - 1 > 0 && level[x - 1, y] != CELL_BLOCK)
-                neighbors.Add(x - 1 + "_" + y);
+                neighbors.Add((x - 1) + "_" + y);
             if (x + 1 < width && level[x + 1, y] != CELL_BLOCK)
-                neighbors.Add(x + 1 + "_" + y);
+                neighbors.Add((x + 1) + "_" + y);
             if (y - 1 > 0 && level[x, y - 1] != CELL_BLOCK)
                 neighbors.Add(x + "_" + (y - 1));
-            if (y + 1 < height && level[x - 1, y] != CELL_BLOCK)
-                neighbors.Add(x - 1 + "_" + y);
+            if (y + 1 < height && level[x, y + 1] != CELL_BLOCK)
+                neighbors.Add(x + "_" + (y + 1));
 
             int altDistance = distances[toVisit] + 1;
             foreach (var neighbor in neighbors)
