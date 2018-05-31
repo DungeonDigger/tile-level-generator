@@ -11,6 +11,8 @@ public class LevelManager : MonoBehaviour {
     public GameObject treasureTile;
     public GameObject enemyTile;
     public GameObject exitTile;
+    public GameObject keyTile;
+    public GameObject lockedDoorTile;
 
     int[,] level;
 
@@ -19,6 +21,8 @@ public class LevelManager : MonoBehaviour {
     public const int CELL_TREASURE = 2;
     public const int CELL_ENEMY = 3;
     public const int CELL_EXIT = 4;
+    public const int CELL_KEY = 5;
+    public const int CELL_DOOR = 6;
 
     // This transform allows us to collect all the tiles
     // under a single parent object
@@ -63,10 +67,19 @@ public class LevelManager : MonoBehaviour {
                 case CELL_EXIT:
                     toInstantiate = exitTile;
                     break;
+                case CELL_KEY:
+                    toInstantiate = keyTile;
+                    break;
+                case CELL_DOOR:
+                    toInstantiate = lockedDoorTile;
+                    break;
             }
 
             if(toInstantiate != null)
             {
+                // Don't allow keys to be overwritten, as this could make levels unplayable
+                if (level[x, y] == CELL_KEY)
+                    return;
                 // Destroy the old tile, if there is one
                 if (placedTiles[x, y] != null)
                     Destroy(placedTiles[x, y]);

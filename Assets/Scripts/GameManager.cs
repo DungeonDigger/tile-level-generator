@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
     static string guiLog = "Controls\n---------\nwasd - Movement\n1,2, 3 - Place Small, Med., Large Room" +
-        "\nj - Place treasure\nk - Place enemy\np - Place Exit\nEsc - Save and close map\n----------\n";
+        "\nj - Place treasure\nk - Place enemy\np - Place Exit\nu - Place key\ni - Place locked door\n" +
+        "Esc - Save and close map\n----------\n";
 
     public static GameManager instance = null;
 
@@ -62,7 +63,7 @@ public class GameManager : MonoBehaviour {
     /// Writes a message to the application GUI
     /// </summary>
     /// <param name="message">The message to write to the GUI console</param>
-    static void LogToGui(string message)
+    public static void LogToGui(string message)
     {
         guiLog += (message + "\n");
     }

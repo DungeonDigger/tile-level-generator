@@ -13,6 +13,10 @@ public abstract class Digger : MonoBehaviour {
     // they can't receive moves while already in motion
     private bool isMoving = false;
 
+    // Keeps track of the number of keys the digger has placed for which no door has
+    // yet been placed. This constraints helps ensure playability of the created levels
+    private int availableKeys = 0;
+
 	// Use this for initialization
 	void Start () {
         rb2d = GetComponent<Rigidbody2D>();
@@ -64,7 +68,19 @@ public abstract class Digger : MonoBehaviour {
             case DiggerAction.PlaceExit:
                 LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_EXIT);
                 break;
-
+            case DiggerAction.PlaceKey:
+                availableKeys++;
+                LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_KEY);
+                break;
+            case DiggerAction.PlaceDoor:
+                if(availableKeys == 0)
+                {
+                    GameManager.LogToGui("Another key needs to be placed before creating another locked door");
+                    break;
+                }
+                availableKeys--;
+                LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_DOOR);
+                break;
         }
 	}
 

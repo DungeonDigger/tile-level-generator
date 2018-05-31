@@ -33,6 +33,10 @@ public class HumanDigger : Digger
             return DiggerAction.PlaceEnemy;
         if (Input.GetButtonDown("PlaceExit"))
             return DiggerAction.PlaceExit;
+        if (Input.GetButtonDown("PlaceKey"))
+            return DiggerAction.PlaceKey;
+        if (Input.GetButtonDown("PlaceDoor"))
+            return DiggerAction.PlaceDoor;
 
         return DiggerAction.None;
     }

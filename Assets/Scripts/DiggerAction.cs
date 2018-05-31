@@ -14,5 +14,7 @@ public enum DiggerAction {
     PlaceEnemy,
     PlaceObstacle,
     PlaceExit,
+    PlaceKey,
+    PlaceDoor,
     None
 }
