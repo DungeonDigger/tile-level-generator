@@ -28,6 +28,7 @@ the digger can perform are:
 - Movement up, down, left, and right to clear out paths
 - Create small, medium, and large square rooms centered around the digger
 - Place treasure, enemy, and level exit tiles
+- Place keys and locked doors
 
 ### Human controls
 
@@ -39,6 +40,9 @@ The following keys can be used for manual control of the digger:
 - `3`: Create large room (7x7)
 - `j`: Place treasure
 - `k`: Place enemy
+- `u`: Place key
+- `i`: Place locked door (*Note*: Keys must be placed before doors can be
+created to ensure playability)
 - `p`: Place level exit
 - `Esc`: Save and quit the current level generating session
 	- Upon quitting, text will appear in a selectable console on the screen
