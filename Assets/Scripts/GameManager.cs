@@ -45,14 +45,18 @@ public class GameManager : MonoBehaviour {
         var currentDateTime = System.DateTime.Now.ToString("yyyyMMddHHmmss");
         var levelFilePath = Application.persistentDataPath + "/" + currentDateTime + "-level.dat";
         var demoFilePath = Application.persistentDataPath + "/" + currentDateTime + "-demo.dat";
+        var fullDemoFilePath = Application.persistentDataPath + "/" + currentDateTime + "-full-demo.dat";
         Level levelData = new Level(LevelManager.instance.GetLevel());
         var demoData = GetDemonstrationString();
+        var fullDemoData = GetFullDemonstrationString();
         File.WriteAllText(levelFilePath, levelData.ToString());
         File.WriteAllText(demoFilePath, demoData);
+        File.WriteAllText(fullDemoFilePath, fullDemoData);
 
         // Write debugging information for the location of the 
         LogToGui("Level written to: " + levelFilePath);
         LogToGui("Demo written to: " + demoFilePath);
+        LogToGui("Full demo written to: " + fullDemoFilePath);
 
         // Reload the scene for a fresh level generation session
         Scene currentScene = SceneManager.GetActiveScene();
@@ -75,5 +79,15 @@ public class GameManager : MonoBehaviour {
     private string GetDemonstrationString()
     {
         return string.Join("\n", demonstration.Select(n => n.ToString()).ToArray());
+    }
+
+    /// <summary>
+    /// Gets the expanded string representation of the expert demonstration to be
+    /// written to a file
+    /// </summary>
+    /// <returns></returns>
+    private string GetFullDemonstrationString()
+    {
+        return string.Join("\n", demonstration.Select(n => n.GetFullStepString()).ToArray());
     }
 }

@@ -16,4 +16,9 @@ public class Step {
     {
         return string.Format("{0}   {1}", Action.ToString(), State.ToString());
     }
+
+    public string GetFullStepString()
+    {
+        return string.Format("{0}   {1}", Action.ToString(), State.GetFullStateString());
+    }
 }
