@@ -30,7 +30,11 @@ public abstract class Digger : MonoBehaviour {
 
         // Clear the square that the digger starts on
         LevelManager.instance.SetTileAt(startX, startY, LevelManager.CELL_OPEN);
-	}
+
+        // Add the initial state with a null action
+        State initialState = State.GetCurrentState();
+        GameManager.instance.demonstration.Add(new Step(DiggerAction.None, initialState));
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -40,6 +44,8 @@ public abstract class Digger : MonoBehaviour {
         var nextAction = GetNextAction();
         if (nextAction == DiggerAction.None)
             return;
+        int x = (int)transform.position.x;
+        int y = (int)transform.position.y;
         switch(nextAction)
         {
             case DiggerAction.Up:
@@ -47,6 +53,8 @@ public abstract class Digger : MonoBehaviour {
             case DiggerAction.Left:
             case DiggerAction.Right:
                 var newLoc = Move(nextAction);
+                x = (int)newLoc.x;
+                y = (int)newLoc.y;
                 break;
             case DiggerAction.RoomSmall:
                 CreateRoom(new Vector2(transform.position.x, transform.position.y), 3);
@@ -80,7 +88,7 @@ public abstract class Digger : MonoBehaviour {
                 LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_DOOR);
                 break;
         }
-        var currentState = State.GetCurrentState();
+        var currentState = State.GetCurrentState(x, y);
         GameManager.instance.demonstration.Add(new Step(nextAction, currentState));
     }
 

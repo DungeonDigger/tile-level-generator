@@ -30,6 +30,20 @@ public class State {
         return new State((int)playerLocation.x, (int)playerLocation.y, dist, LevelManager.instance.GetLevel());
     }
 
+    /// <summary>
+    /// Gets the current state of the world
+    /// </summary>
+    /// <param name="diggerX">x pos of the digger</param>
+    /// <param name="diggerY">y pos of the digger</param>
+    /// <returns>The current state</returns>
+    public static State GetCurrentState(int diggerX, int diggerY)
+    {
+        var digger = GameObject.FindObjectOfType<Digger>();
+        var dist = LevelManager.instance.GetShortestPathDistance(digger.startX, digger.startY, diggerX, diggerY);
+
+        return new State(diggerX, diggerY, dist, LevelManager.instance.GetLevel());
+    }
+
     public override string ToString()
     {
         return string.Format("x={0},y={1},d={2}", DiggerX, DiggerY, DistanceFromStart);

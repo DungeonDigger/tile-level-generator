@@ -22,9 +22,6 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
 
         demonstration = new List<Step>();
-        // Add the initial state with a null action
-        State initialState = State.GetCurrentState();
-        demonstration.Add(new Step(DiggerAction.None, initialState));
     }
 
     // Update is called once per frame
