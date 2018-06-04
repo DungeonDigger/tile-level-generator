@@ -8,13 +8,15 @@ public class State {
     public int DiggerY { get; set; }
     public int DistanceFromStart { get; set; }
     public int[,] Tiles { get; set; }
+    public int AvailableKeys { get; set; }
 
-    public State(int diggerX, int diggerY, int distanceFromStart, int[,] tiles)
+    public State(int diggerX, int diggerY, int distanceFromStart, int[,] tiles, int availableKeys)
     {
         DiggerX = diggerX;
         DiggerY = diggerY;
         DistanceFromStart = distanceFromStart;
         Tiles = (int[,])tiles.Clone();
+        AvailableKeys = availableKeys;
     }
 
     /// <summary>
@@ -27,7 +29,7 @@ public class State {
         var playerLocation = digger.transform.position;
         var dist = LevelManager.instance.GetShortestPathDistance(digger.startX, digger.startY, (int)playerLocation.x, (int)playerLocation.y);
 
-        return new State((int)playerLocation.x, (int)playerLocation.y, dist, LevelManager.instance.GetLevel());
+        return new State((int)playerLocation.x, (int)playerLocation.y, dist, LevelManager.instance.GetLevel(), digger.availableKeys);
     }
 
     /// <summary>
@@ -41,7 +43,7 @@ public class State {
         var digger = GameObject.FindObjectOfType<Digger>();
         var dist = LevelManager.instance.GetShortestPathDistance(digger.startX, digger.startY, diggerX, diggerY);
 
-        return new State(diggerX, diggerY, dist, LevelManager.instance.GetLevel());
+        return new State(diggerX, diggerY, dist, LevelManager.instance.GetLevel(), digger.availableKeys);
     }
 
     public override string ToString()
@@ -68,6 +70,6 @@ public class State {
         }
         levelString = levelString.Substring(0, levelString.Length - 1);
 
-        return string.Format("x={0};y={1};t={2}", DiggerX, DiggerY, levelString);
+        return string.Format("x={0};y={1};k={2};t={3}", DiggerX, DiggerY, AvailableKeys, levelString);
     }
 }

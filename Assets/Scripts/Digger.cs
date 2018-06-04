@@ -15,7 +15,8 @@ public abstract class Digger : MonoBehaviour {
 
     // Keeps track of the number of keys the digger has placed for which no door has
     // yet been placed. This constraints helps ensure playability of the created levels
-    private int availableKeys = 0;
+    [HideInInspector]
+    public int availableKeys = 0;
 
 	// Use this for initialization
 	void Start () {
