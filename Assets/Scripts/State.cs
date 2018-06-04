@@ -14,7 +14,7 @@ public class State {
         DiggerX = diggerX;
         DiggerY = diggerY;
         DistanceFromStart = distanceFromStart;
-        Tiles = tiles;
+        Tiles = (int[,])tiles.Clone();
     }
 
     /// <summary>
