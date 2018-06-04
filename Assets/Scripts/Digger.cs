@@ -40,8 +40,6 @@ public abstract class Digger : MonoBehaviour {
         var nextAction = GetNextAction();
         if (nextAction == DiggerAction.None)
             return;
-        var currentState = State.GetCurrentState();
-        GameManager.instance.demonstration.Add(new Step(nextAction, currentState));
         switch(nextAction)
         {
             case DiggerAction.Up:
@@ -82,7 +80,9 @@ public abstract class Digger : MonoBehaviour {
                 LevelManager.instance.SetTileAt((int)transform.position.x, (int)transform.position.y, LevelManager.CELL_DOOR);
                 break;
         }
-	}
+        var currentState = State.GetCurrentState();
+        GameManager.instance.demonstration.Add(new Step(nextAction, currentState));
+    }
 
     /// <summary>
     /// Returns the next action that should be executed
