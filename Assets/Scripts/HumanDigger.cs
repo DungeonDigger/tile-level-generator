@@ -5,6 +5,10 @@
 /// </summary>
 public class HumanDigger : Digger
 {
+    public GameObject aiFriend;
+
+    GameObject activeFriend;
+
     /// <summary>
     /// Uses input controls to determine the next action
     /// that should be taken.
@@ -37,6 +41,21 @@ public class HumanDigger : Digger
             return DiggerAction.PlaceKey;
         if (Input.GetButtonDown("PlaceDoor"))
             return DiggerAction.PlaceDoor;
+        if (Input.GetButtonDown("LoadAi"))
+        {
+            if (activeFriend == null)
+            {
+                activeFriend = Instantiate(aiFriend, new Vector3(transform.position.x, transform.position.y, 0f),
+                Quaternion.identity);
+            }
+        }
+        if (Input.GetButtonDown("UnloadAi"))
+        {
+            if (activeFriend != null)
+            {
+                Destroy(activeFriend);
+            }
+        }
 
         return DiggerAction.None;
     }

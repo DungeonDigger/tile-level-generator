@@ -19,7 +19,7 @@ public abstract class Digger : MonoBehaviour {
     public int availableKeys = 0;
 
 	// Use this for initialization
-	void Start () {
+	public virtual void Start () {
         rb2d = GetComponent<Rigidbody2D>();
         inverseMoveTime = 1f / moveTime;
         // Ensure the starting point is valid
