@@ -48,3 +48,5 @@ created to ensure playability)
 	- Upon quitting, text will appear in a selectable console on the screen
 	with the path to files containing the generated tilemap and the recorded
 	episode data (a series of states and actions).
+- `Insert`: Spawn an AI digger at the starting location which executes a concrete set of actions
+- `Delete`: Destroys the AI digger
