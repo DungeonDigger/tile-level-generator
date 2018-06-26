@@ -169,9 +169,49 @@ public abstract class Digger : MonoBehaviour {
         if (top >= LevelManager.instance.height)
             top = LevelManager.instance.height - 1;
 
+        // Try to find a door tile in the area we're clearing. We will protect the hallway it lives
+        // in from being cleared out
+        var protectCol = false;
+        var protectRow = false;
+        var protectIx = -1;
+        for (int i = left; i <= right; i++)
+        {
+            for (int j = bottom; j <= top; j++)
+            {
+                if(LevelManager.instance.GetTileAt(i, j) == LevelManager.CELL_DOOR)
+                {
+                    // Find the axis of the door's hallway
+                    if((i - 1 >= 0 && LevelManager.instance.GetTileAt(i - 1, j) != LevelManager.CELL_BLOCK) ||
+                        (i + 1 < LevelManager.instance.width && LevelManager.instance.GetTileAt(i + 1, j) != LevelManager.CELL_BLOCK)) {
+                        protectCol = true;
+                        protectIx = i;
+                        break;
+                    }
+                    else if ((j - 1 >= 0 && LevelManager.instance.GetTileAt(i, j - 1) != LevelManager.CELL_BLOCK) ||
+                        (j + 1 < LevelManager.instance.height && LevelManager.instance.GetTileAt(i, j + 1) != LevelManager.CELL_BLOCK))
+                    {
+                        protectRow = true;
+                        protectIx = j;
+                        break;
+                    }
+                }
+            }
+            if (protectCol || protectRow) break;
+        }  
+
         for (int x = left; x <= right; x++)
+        {
+            if (protectCol && x == protectIx) continue;
             for (int y = bottom; y <= top; y++)
-                LevelManager.instance.SetTileAt(x, y, LevelManager.CELL_OPEN);
+            {
+                if (protectRow && y == protectIx) continue;
+                if(LevelManager.instance.GetTileAt(x, y) == LevelManager.CELL_BLOCK)
+                {
+                    LevelManager.instance.SetTileAt(x, y, LevelManager.CELL_OPEN);
+                }
+            }
+                
+        }
     }
 
     private void DigTile(int x, int y)
