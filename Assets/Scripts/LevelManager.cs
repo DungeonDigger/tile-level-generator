@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviour {
     public GameObject exitTile;
     public GameObject keyTile;
     public GameObject lockedDoorTile;
+    public GameObject enemy;
 
     int[,] level;
 
@@ -161,6 +163,67 @@ public class LevelManager : MonoBehaviour {
 
         // Our destination was not found
         return -1;
+    }
+
+    /// <summary>
+    /// Sets up the scene based on a text-file tilemap
+    /// </summary>
+    /// <param name="levelTileMap">The tilemap to use in assembling the level</param>
+    public void SetupScene(TextAsset levelTileMap)
+    {
+        // Clear out any existing tiles
+        for (int i = 0; i < level.GetLength(0); i++)
+        {
+            for (int j = 0; j < level.GetLength(1); j++)
+            {
+                if (placedTiles[i, j] != null)
+                    Destroy(placedTiles[i, j]);
+            }
+        }
+
+        var levelRows = levelTileMap.text.Split('\n').Where(n => n != null && n != "").ToList();
+        var rowCount = levelRows.Count;
+        var columnCount = levelRows.First().Split(' ').Where(n => n != null && n != "").ToList().Count;
+        level = new int[columnCount, rowCount];
+        placedTiles = new GameObject[columnCount, rowCount];
+
+        height = rowCount;
+        width = columnCount;
+        InitializeEmptyLevel();
+
+        int row = 49;
+        foreach(var levelRow in levelRows)
+        {
+            var rowItems = levelRow.Split(' ').ToList();
+            for(var col = 0; col < columnCount; col++)
+            {
+                
+                // Only BLOCK, OPEN, and EXIT form the actual tiles
+                // of the map. All other "tiles" will be added as separate
+                // elements into the scene.
+                var tile = int.Parse(rowItems[col]);
+
+                if (tile == CELL_BLOCK)
+                {
+                    SetTileAt(col, row, CELL_BLOCK);
+                }
+                else if (tile == CELL_EXIT)
+                {
+                    SetTileAt(col, row, CELL_EXIT);
+                }
+                else
+                {
+                    SetTileAt(col, row, CELL_OPEN);
+                }
+
+                // TODO Add enemy, treasure, key, door, etc.
+                if(tile == CELL_ENEMY)
+                {
+                    Instantiate(enemy, new Vector3(col, row, 0f), Quaternion.identity);
+                }
+            }
+            row--;
+        }
     }
 
     private void InitializeEmptyLevel()
