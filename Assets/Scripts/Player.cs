@@ -7,38 +7,65 @@ public class Player : MonoBehaviour {
 
     public float speed = 4f;
     private Rigidbody2D rb2d;
-    private bool canMove = true;
+    private Animator animator;
+    private int knockbackCount = 0;
+    private int swingCount = 0;
+
+    private int health = 100;
+    private int keyCount = 0;
+
+    public bool IsSwinging()
+    {
+        return swingCount > 0;
+    }
 
     private void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+    }
+
+    private void Update()
+    {
+        if(Input.GetButtonDown("Sword"))
+        {
+            animator.SetTrigger("playerChop");
+            swingCount = 10;
+        }
+        if (swingCount > 0)
+            swingCount--;
     }
 
     void FixedUpdate()
     {
-        if(canMove)
+        if(knockbackCount == 0)
         {
             Vector2 targetVelocity = new Vector2(Input.GetAxisRaw("Horizontal"),
             Input.GetAxisRaw("Vertical"));
             rb2d.velocity = targetVelocity * speed;
+            if(targetVelocity.x > 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+            } else if(targetVelocity.x < 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+            }
         }
-        //else if(rb2d.velocity == Vector2.zero)
-        //{
-        //    rb2d.drag = 0;
-        //    canMove = true;
-        //}
-        
+        else
+        {
+            knockbackCount--;
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            canMove = false;
-            //rb2d.velocity = -rb2d.velocity;
-            Debug.Log("WOWO");
-            rb2d.AddForce(Vector2.left * 100);
-            rb2d.drag = 10;
+            animator.SetTrigger("playerHit");
+            knockbackCount = 10;
+            var direction = -(collision.gameObject.transform.position - transform.position).normalized;
+            rb2d.AddForce(direction * 500);
         }
     }
 

@@ -15,6 +15,9 @@ public class LevelManager : MonoBehaviour {
     public GameObject keyTile;
     public GameObject lockedDoorTile;
     public GameObject enemy;
+    public GameObject treasure;
+    public GameObject door;
+    public GameObject key;
 
     int[,] level;
 
@@ -220,6 +223,18 @@ public class LevelManager : MonoBehaviour {
                 if(tile == CELL_ENEMY)
                 {
                     Instantiate(enemy, new Vector3(col, row, 0f), Quaternion.identity);
+                }
+                else if(tile == CELL_DOOR)
+                {
+                    Instantiate(door, new Vector3(col, row, 0f), Quaternion.identity);
+                }
+                else if(tile == CELL_KEY)
+                {
+                    Instantiate(key, new Vector3(col, row, 0f), Quaternion.identity);
+                }
+                else if(tile == CELL_TREASURE)
+                {
+                    Instantiate(treasure, new Vector3(col, row, 0f), Quaternion.identity);
                 }
             }
             row--;
