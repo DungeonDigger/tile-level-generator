@@ -11,6 +11,8 @@ public class DemoGameManager : MonoBehaviour {
     private int levelIndex = 0;
     [HideInInspector]
     public List<GameObject> enemies;
+    [HideInInspector]
+    public int score = 0;
 
     private void Awake()
     {
@@ -39,6 +41,11 @@ public class DemoGameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        var player = GameObject.FindObjectOfType<Player>();
+        GameObject.FindObjectOfType<UnityEngine.UI.Text>().text =
+            "Health: " + player.health + "\n" +
+            "    : " + player.keyCount + "\n" +
+            "Score: " + score;
+
 	}
 }

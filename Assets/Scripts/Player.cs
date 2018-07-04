@@ -11,8 +11,10 @@ public class Player : MonoBehaviour {
     private int knockbackCount = 0;
     private int swingCount = 0;
 
-    private int health = 100;
-    private int keyCount = 0;
+    [HideInInspector]
+    public int health = 100;
+    [HideInInspector]
+    public int keyCount = 0;
 
     public bool IsSwinging()
     {
@@ -62,10 +64,30 @@ public class Player : MonoBehaviour {
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
+            collision.gameObject.GetComponent<Animator>().SetTrigger("enemyAttack");
             animator.SetTrigger("playerHit");
             knockbackCount = 10;
             var direction = -(collision.gameObject.transform.position - transform.position).normalized;
             rb2d.AddForce(direction * 500);
+            health -= 10;
+        }
+        else if(collision.gameObject.CompareTag("Key"))
+        {
+            keyCount++;
+            Destroy(collision.gameObject);
+        }
+        else if(collision.gameObject.CompareTag("Door"))
+        {
+            if(keyCount > 0)
+            {
+                keyCount--;
+                Destroy(collision.gameObject);
+            }
+        }
+        else if(collision.gameObject.CompareTag("Treasure"))
+        {
+            DemoGameManager.instance.score += 100;
+            Destroy(collision.gameObject);
         }
     }
 
