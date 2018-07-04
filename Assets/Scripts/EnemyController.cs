@@ -21,39 +21,43 @@ public class EnemyController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        var targetHeading = playerTransform.position - transform.position;
-        var targetDirection = targetHeading.normalized;
-
-        if(knockbackTime == 0)
+        if(!DemoGameManager.instance.doingSetup)
         {
-            if (Vector3.Distance(transform.position, playerTransform.position) <= visionRange)
+            var targetHeading = playerTransform.position - transform.position;
+            var targetDirection = targetHeading.normalized;
+
+            if (knockbackTime == 0)
             {
-                transform.position = Vector2.MoveTowards(transform.position,
-                    playerTransform.position, speed * Time.deltaTime);
+                if (Vector3.Distance(transform.position, playerTransform.position) <= visionRange)
+                {
+                    transform.position = Vector2.MoveTowards(transform.position,
+                        playerTransform.position, speed * Time.deltaTime);
+                }
+                else
+                {
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                }
             }
-            else
+
+
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().IsSwinging() &&
+                Vector3.Distance(transform.position, playerTransform.position) < 1.5 &&
+                knockbackTime == 0)
             {
-                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                health -= 5;
+                var direction = -(playerTransform.position - transform.position).normalized;
+                GetComponent<Rigidbody2D>().AddForce(direction * 500);
+                knockbackTime = 20;
             }
-        }
-        
 
-        if(GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().IsSwinging() &&
-            Vector3.Distance(transform.position, playerTransform.position) < 1.5 &&
-            knockbackTime == 0)
-        {
-            health -= 5;
-            var direction = -(playerTransform.position - transform.position).normalized;
-            GetComponent<Rigidbody2D>().AddForce(direction * 500);
-            knockbackTime = 20;
-        }
+            if (health <= 0)
+            {
+                DemoGameManager.instance.score += 25;
+                Destroy(gameObject);
+            }
 
-        if (health <= 0)
-        {
-            Destroy(gameObject);
+            if (knockbackTime > 0)
+                knockbackTime--;
         }
-
-        if (knockbackTime > 0)
-            knockbackTime--;
 	}
 }

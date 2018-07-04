@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour {
     public GameObject treasure;
     public GameObject door;
     public GameObject key;
+    public GameObject exit;
 
     int[,] level;
 
@@ -33,6 +34,7 @@ public class LevelManager : MonoBehaviour {
     // under a single parent object
     private Transform levelHolder;
     GameObject[,] placedTiles;
+    private List<GameObject> levelItems;
 
 	void Awake () {
         if (instance == null)
@@ -41,6 +43,7 @@ public class LevelManager : MonoBehaviour {
             Destroy(gameObject);
         levelHolder = new GameObject("Board").transform;
         InitializeEmptyLevel();
+        levelItems = new List<GameObject>();
 	}
 
     public int GetTileAt(int x, int y)
@@ -194,7 +197,7 @@ public class LevelManager : MonoBehaviour {
         width = columnCount;
         InitializeEmptyLevel();
 
-        int row = 49;
+        int row = rowCount - 1;
         foreach(var levelRow in levelRows)
         {
             var rowItems = levelRow.Split(' ').ToList();
@@ -219,25 +222,46 @@ public class LevelManager : MonoBehaviour {
                     SetTileAt(col, row, CELL_OPEN);
                 }
 
-                // TODO Add enemy, treasure, key, door, etc.
                 if(tile == CELL_ENEMY)
                 {
-                    Instantiate(enemy, new Vector3(col, row, 0f), Quaternion.identity);
+                    levelItems.Add(Instantiate(enemy, new Vector3(col, row, 0f), Quaternion.identity));
                 }
                 else if(tile == CELL_DOOR)
                 {
-                    Instantiate(door, new Vector3(col, row, 0f), Quaternion.identity);
+                    levelItems.Add(Instantiate(door, new Vector3(col, row, 0f), Quaternion.identity));
                 }
                 else if(tile == CELL_KEY)
                 {
-                    Instantiate(key, new Vector3(col, row, 0f), Quaternion.identity);
+                    levelItems.Add(Instantiate(key, new Vector3(col, row, 0f), Quaternion.identity));
                 }
                 else if(tile == CELL_TREASURE)
                 {
-                    Instantiate(treasure, new Vector3(col, row, 0f), Quaternion.identity);
+                    levelItems.Add(Instantiate(treasure, new Vector3(col, row, 0f), Quaternion.identity));
+                }
+                else if(tile == CELL_EXIT)
+                {
+                    levelItems.Add(Instantiate(exit, new Vector3(col, row, 0f), Quaternion.identity));
                 }
             }
             row--;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (GameObject go in levelItems)
+        {
+            Destroy(go);
+        }
+        for(int i = 0; i < placedTiles.GetLength(0); i++)
+        {
+            for(int j = 0; j < placedTiles.GetLength(1); j++)
+            {
+                if(placedTiles[i,j] != null)
+                {
+                    Destroy(placedTiles[i, j]);
+                }
+            }
         }
     }
 

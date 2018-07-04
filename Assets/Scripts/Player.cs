@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof (Rigidbody2D))]
 public class Player : MonoBehaviour {
@@ -21,6 +22,11 @@ public class Player : MonoBehaviour {
         return swingCount > 0;
     }
 
+    private void Awake()
+    {
+        //DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -29,35 +35,49 @@ public class Player : MonoBehaviour {
 
     private void Update()
     {
-        if(Input.GetButtonDown("Sword"))
+        if(!DemoGameManager.instance.doingSetup)
         {
-            animator.SetTrigger("playerChop");
-            swingCount = 10;
+            if (Input.GetButtonDown("Sword"))
+            {
+                animator.SetTrigger("playerChop");
+                swingCount = 10;
+            }
+            if (swingCount > 0)
+                swingCount--;
         }
-        if (swingCount > 0)
-            swingCount--;
+
+        if(health <= 0)
+        {
+            // Reset the level
+            DemoGameManager.instance.playerDied = true;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        }
+        
     }
 
     void FixedUpdate()
     {
-        if(knockbackCount == 0)
+        if(!DemoGameManager.instance.doingSetup)
         {
-            Vector2 targetVelocity = new Vector2(Input.GetAxisRaw("Horizontal"),
-            Input.GetAxisRaw("Vertical"));
-            rb2d.velocity = targetVelocity * speed;
-            if(targetVelocity.x > 0)
+            if (knockbackCount == 0)
             {
-                GetComponent<SpriteRenderer>().flipX = false;
-            } else if(targetVelocity.x < 0)
+                Vector2 targetVelocity = new Vector2(Input.GetAxisRaw("Horizontal"),
+                Input.GetAxisRaw("Vertical"));
+                rb2d.velocity = targetVelocity * speed;
+                if (targetVelocity.x > 0)
+                {
+                    GetComponent<SpriteRenderer>().flipX = false;
+                }
+                else if (targetVelocity.x < 0)
+                {
+                    GetComponent<SpriteRenderer>().flipX = true;
+                }
+            }
+            else
             {
-                GetComponent<SpriteRenderer>().flipX = true;
+                knockbackCount--;
             }
         }
-        else
-        {
-            knockbackCount--;
-        }
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -88,6 +108,10 @@ public class Player : MonoBehaviour {
         {
             DemoGameManager.instance.score += 100;
             Destroy(collision.gameObject);
+        }
+        else if(collision.gameObject.CompareTag("Exit"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
     }
 
