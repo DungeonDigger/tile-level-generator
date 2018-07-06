@@ -203,7 +203,7 @@ public class LevelManager : MonoBehaviour {
             var rowItems = levelRow.Split(' ').ToList();
             for(var col = 0; col < columnCount; col++)
             {
-                
+
                 // Only BLOCK, OPEN, and EXIT form the actual tiles
                 // of the map. All other "tiles" will be added as separate
                 // elements into the scene.
