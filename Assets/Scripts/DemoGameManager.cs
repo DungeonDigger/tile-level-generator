@@ -90,6 +90,6 @@ public class DemoGameManager : MonoBehaviour {
             "    : " + player.keyCount + "\n" +
             "Score: " + score;
         GameObject.FindGameObjectWithTag("LevelText").GetComponent<UnityEngine.UI.Text>().text =
-            "Level " + (1 + levelIndex) + "\nPress Space to Continue";
+            "Level " + (0 + levelIndex) + "\nPress Space to Continue";
     }
 }
